@@ -126,99 +126,98 @@ public class BeerServiceTest {
 
     @Test
     void whenIncrementIsCalledThenIncrementBeerStock() throws BeerNotFoundException, BeerStockExceededException {
+        //given
+        int quantityToIncrement = 10;
+        int expectedQuantityAfterIncrement = beerDTO.getQuantity() + quantityToIncrement;
         //when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
         when(beerRepository.save(beer)).thenReturn(beer);
-
-        int quantityToIncrement = 10;
-        int expectedQuantityAfterIncrement = beerDTO.getQuantity() + quantityToIncrement;
-
         // then
         BeerDTO incrementedBeerDTO = beerService.increment(beerDTO.getId(), quantityToIncrement);
-
         assertThat(expectedQuantityAfterIncrement).isEqualTo(incrementedBeerDTO.getQuantity());
         assertThat(expectedQuantityAfterIncrement).isLessThan(beerDTO.getMax());
     }
 
     @Test
     void whenIncrementIsGreaterThanMaxThenThrowException() {
+        //given
+        int quantityToIncrement = 80;
         //when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
-
-        int quantityToIncrement = 80;
+        //then
         assertThatThrownBy(() -> beerService.increment(beerDTO.getId(), quantityToIncrement))
                 .isInstanceOf(BeerStockExceededException.class);
     }
 
     @Test
     void whenIncrementAfterSumIsGreaterThanMaxThenThrowException() {
+        //given
+        int quantityToIncrement = 45;
         //when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
-
-        int quantityToIncrement = 45;
+        //then
         assertThatThrownBy(() -> beerService.increment(beerDTO.getId(), quantityToIncrement))
                 .isInstanceOf(BeerStockExceededException.class);
     }
 
     @Test
     void whenIncrementIsCalledWithInvalidIdThenThrowException() {
+        //given
         int quantityToIncrement = 10;
-
+        //when
         when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
-
+        //then
         assertThatThrownBy(() -> beerService.increment(INVALID_BEER_ID, quantityToIncrement))
                 .isInstanceOf(BeerNotFoundException.class);
     }
 
     @Test
     void whenDecrementIsCalledThenDecrementBeerStock() throws BeerNotFoundException, BeerStockExceededException {
-        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
-
-        when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
-        when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
-
-        int quantityToDecrement = 5;
-        int expectedQuantityAfterDecrement = expectedBeerDTO.getQuantity() - quantityToDecrement;
-        BeerDTO incrementedBeerDTO = beerService.decrement(expectedBeerDTO.getId(), quantityToDecrement);
-
-        assertThat(expectedQuantityAfterDecrement).isEqualTo(incrementedBeerDTO.getQuantity());
+        //given
+        int quantityToDecrement = beerDTO.getQuantity() / 2;
+        int expectedQuantityAfterDecrement = beerDTO.getQuantity() - quantityToDecrement;
+        //when
+        when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
+        when(beerRepository.save(beer)).thenReturn(beer);
+        //then
+        BeerDTO decrementedBeerDTO = beerService.decrement(beerDTO.getId(), quantityToDecrement);
+        assertThat(expectedQuantityAfterDecrement).isEqualTo(decrementedBeerDTO.getQuantity());
         assertThat(expectedQuantityAfterDecrement).isGreaterThan(0);
     }
-//
-//    @Test
-//    void whenDecrementIsCalledToEmptyStockThenEmptyBeerStock() throws BeerNotFoundException, BeerStockExceededException {
-//        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-//        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
-//
-//        when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
-//        when(beerRepository.save(expectedBeer)).thenReturn(expectedBeer);
-//
-//        int quantityToDecrement = 10;
-//        int expectedQuantityAfterDecrement = expectedBeerDTO.getQuantity() - quantityToDecrement;
-//        BeerDTO incrementedBeerDTO = beerService.decrement(expectedBeerDTO.getId(), quantityToDecrement);
-//
-//        assertThat(expectedQuantityAfterDecrement, equalTo(0));
-//        assertThat(expectedQuantityAfterDecrement, equalTo(incrementedBeerDTO.getQuantity()));
-//    }
-//
-//    @Test
-//    void whenDecrementIsLowerThanZeroThenThrowException() {
-//        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-//        Beer expectedBeer = beerMapper.toModel(expectedBeerDTO);
-//
-//        when(beerRepository.findById(expectedBeerDTO.getId())).thenReturn(Optional.of(expectedBeer));
-//
-//        int quantityToDecrement = 80;
-//        assertThrows(BeerStockExceededException.class, () -> beerService.decrement(expectedBeerDTO.getId(), quantityToDecrement));
-//    }
-//
-//    @Test
-//    void whenDecrementIsCalledWithInvalidIdThenThrowException() {
-//        int quantityToDecrement = 10;
-//
-//        when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
-//
-//        assertThrows(BeerNotFoundException.class, () -> beerService.decrement(INVALID_BEER_ID, quantityToDecrement));
-//    }
+
+    @Test
+    void whenDecrementIsCalledToEmptyStockThenEmptyBeerStock() throws BeerNotFoundException, BeerStockExceededException {
+        //given
+        int quantityToDecrement = 10;
+        int expectedQuantityAfterDecrement = beerDTO.getQuantity() - quantityToDecrement;
+        //when
+        when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
+        when(beerRepository.save(beer)).thenReturn(beer);
+        //then
+        BeerDTO incrementedBeerDTO = beerService.decrement(beerDTO.getId(), quantityToDecrement);
+        assertThat(expectedQuantityAfterDecrement).isEqualTo(0);
+        assertThat(expectedQuantityAfterDecrement).isEqualTo(incrementedBeerDTO.getQuantity());
+    }
+
+    @Test
+    void whenDecrementIsLowerThanZeroThenThrowException() {
+        //given
+        int quantityToDecrement = 80;
+        // when
+        when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
+        //then
+        assertThatThrownBy(() -> beerService.decrement(beerDTO.getId(), quantityToDecrement))
+                .isInstanceOf(BeerStockExceededException.class);
+    }
+
+    @Test
+    void whenDecrementIsCalledWithInvalidIdThenThrowException() {
+        //given
+        int quantityToDecrement = 10;
+        //when
+        when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
+        //then
+        assertThatThrownBy(() -> beerService.decrement(INVALID_BEER_ID, quantityToDecrement))
+                .isInstanceOf(BeerNotFoundException.class);
+    }
 }
