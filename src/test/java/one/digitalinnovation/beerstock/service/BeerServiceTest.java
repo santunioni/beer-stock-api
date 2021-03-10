@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -135,41 +134,33 @@ public class BeerServiceTest {
 
     @Test
     void whenIncrementIsGreaterThanMaxThenThrowException() {
-        //given
-        int quantityToIncrement = 80;
-
         //when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
 
         //then
-        assertThatThrownBy(() -> beerService.increment(beerDTO.getId(), quantityToIncrement))
-                .isInstanceOf(BeerStockExceededException.class);
+        assertThatThrownBy(() -> beerService.increment(beerDTO.getId(), beer.getMax() + 1)
+        ).isInstanceOf(BeerStockExceededException.class);
     }
 
     @Test
     void whenIncrementAfterSumIsGreaterThanMaxThenThrowException() {
-        //given
-        int quantityToIncrement = 45;
-
         //when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
 
         //then
-        assertThatThrownBy(() -> beerService.increment(beerDTO.getId(), quantityToIncrement))
-                .isInstanceOf(BeerStockExceededException.class);
+        assertThatThrownBy(() -> beerService.increment(
+                beerDTO.getId(), beer.getMax() - beer.getQuantity() + 1)
+        ).isInstanceOf(BeerStockExceededException.class);
     }
 
     @Test
     void whenIncrementIsCalledWithInvalidIdThenThrowException() {
-        //given
-        int quantityToIncrement = 10;
-
         //when
         when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> beerService.increment(INVALID_BEER_ID, quantityToIncrement))
-                .isInstanceOf(BeerNotFoundException.class);
+        assertThatThrownBy(() -> beerService.increment(INVALID_BEER_ID, 10)
+        ).isInstanceOf(BeerNotFoundException.class);
     }
 
     @Test
@@ -190,43 +181,32 @@ public class BeerServiceTest {
 
     @Test
     void whenDecrementIsCalledToEmptyStockThenEmptyBeerStock() throws BeerNotFoundException, BeerStockEmptyException {
-        //given
-        int quantityToDecrement = 10;
-        int expectedQuantityAfterDecrement = beerDTO.getQuantity() - quantityToDecrement;
-
         //when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
         when(beerRepository.save(beer)).thenReturn(beer);
 
         //then
-        BeerDTO incrementedBeerDTO = beerService.decrement(beerDTO.getId(), quantityToDecrement);
-        assertThat(expectedQuantityAfterDecrement).isEqualTo(0);
-        assertThat(expectedQuantityAfterDecrement).isEqualTo(incrementedBeerDTO.getQuantity());
+        BeerDTO decrementedBeerDTO = beerService.decrement(beerDTO.getId(), beerDTO.getQuantity());
+        assertThat(decrementedBeerDTO.getQuantity()).isEqualTo(0);
     }
 
     @Test
-    void whenDecrementIsLowerThanZeroThenThrowException() {
-        //given
-        int quantityToDecrement = 80;
-
+    void whenDecrementIsHigherThanQuantityThenThrowException() {
         // when
         when(beerRepository.findById(beerDTO.getId())).thenReturn(Optional.of(beer));
 
         //then
-        assertThatThrownBy(() -> beerService.decrement(beerDTO.getId(), quantityToDecrement))
-                .isInstanceOf(BeerStockEmptyException.class);
+        assertThatThrownBy(() -> beerService.decrement(beerDTO.getId(), 2 * beer.getQuantity())
+        ).isInstanceOf(BeerStockEmptyException.class);
     }
 
     @Test
     void whenDecrementIsCalledWithInvalidIdThenThrowException() {
-        //given
-        int quantityToDecrement = 10;
-
         //when
         when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> beerService.decrement(INVALID_BEER_ID, quantityToDecrement))
-                .isInstanceOf(BeerNotFoundException.class);
+        assertThatThrownBy(() -> beerService.decrement(INVALID_BEER_ID, 10)
+        ).isInstanceOf(BeerNotFoundException.class);
     }
 }
