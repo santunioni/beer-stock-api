@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: beerstock-ns
+  name: beerstock-mysql-dp
+spec:
+  selector:
+    matchLabels:
+      app: beerstock-mysql-pod
+  replicas: 1
+  template:
+    metadata:
+      namespace: beerstock-ns
+      labels:
+        app: beerstock-mysql-pod
+    spec:
+      containers:
+        - name: beerstock-mysql-container
+          image: mysql:8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          ports:
+            - containerPort: 3306 
+          envFrom:
+            - configMapRef: {name: database-config}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: beerstock-ns
+  name: beerstock-mysql-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: beerstock-mysql-dp
+  ports:
+  - port: 3306
+    targetPort: 3306

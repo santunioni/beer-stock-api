@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+data:
+  MYSQL_DATABASE: beerstock
+  MYSQL_USER: beerstock-api
+  MYSQL_PASSWORD: beerstock-pass
+  MYSQL_RANDOM_ROOT_PASSWORD: "true"
+  RUNNING_ENVIRONMENT: mysql
+  MYSQL_HOST: beerstock-mysql-svc.beerstock.svc.cluster.local

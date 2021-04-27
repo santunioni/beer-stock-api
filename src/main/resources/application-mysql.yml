@@ -5,7 +5,7 @@ spring:
     generate-ddl: true
     properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/${MYSQL_DATABASE:beerstock}
     username: ${MYSQL_USER:beerstock-api}
     password: ${MYSQL_PASSWORD:beerstock-pass}

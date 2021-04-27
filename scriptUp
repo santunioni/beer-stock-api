@@ -2,11 +2,13 @@ docker network create -d bridge beerstock_network || true
 
 docker run --rm -itd --name beerstock_mysql --network=beerstock-network --env-file .env mysql:8
 
+./mvnw clean install
+
 echo "Let's sleep for 10 seconds and give some time for the database to start gracefully ..."
 sleep 10s
 
-./mvnw clean install
 docker build . -t santunioni/beerstock_api:0.0.1
+docker tag santunioni/beerstock_api:0.0.1 santunioni/beerstock_api:latest
 docker run --rm -itdp 8080:8080 --name beerstock_api --network=beerstock-network --env-file .env santunioni/beerstock_api:0.0.1
 
 echo "You are ready to go! Access http://localhost:8080/api/v1/beers to see the list of Beers."
