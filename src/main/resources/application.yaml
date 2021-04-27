@@ -1,0 +1,5 @@
+spring:
+  profiles.active: ${SPRING_PROFILE:dev}
+  application.name: Spring Boot Config Exercise
+  messages.encoding: UTF-8
+  jpa.database-platform: org.hibernate.dialect.H2Dialect

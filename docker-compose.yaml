@@ -2,21 +2,21 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: MySQL
+    container_name: beerstock_mysql
     restart: always
     command: --default-authentication-plugin=mysql_native_password
-#    ports:              # Uncomment both lines if you want to
-#      - 3306:3306       # access the database outside the api.
+    ports:              # Uncomment both lines if you want to
+      - 3306:3306       # access the database outside the api.
     env_file:
-      - .env
+      - database.env
     networks:
       - network-database
 
   beerstock:
-    build: .
+    image: santunioni/beerstock_api:0.0.2
     container_name: beerstock_api
     env_file:
-      - .env
+      - app.env
     ports:
       - 8080:8080
     restart: always

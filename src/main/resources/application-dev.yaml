@@ -1,0 +1,12 @@
+#DEV environment
+spring:
+  # dont do this in production!!
+  jpa:
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${DATABASE_SERVER_NAME:localhost}:3306/${DATABASE_NAME:beerstock}
+    username: ${DATABASE_USER_NAME:beerstock-api}
+    password: ${DATABASE_USER_PASSWORD:beerstock-pass}

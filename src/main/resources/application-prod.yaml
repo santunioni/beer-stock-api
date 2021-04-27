@@ -1,0 +1,9 @@
+#MYSQL TEST environment
+spring:
+  lifecycle.timeout-per-shutdown-phase: ${SHUTDOWN_TIMEOUT:30s}
+  jpa.hibernate.ddl-auto: none
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DATABASE_SERVER_NAME}:3306/${DATABASE_NAME}
+    username: ${DATABASE_USER_NAME}
+    password: ${DATABASE_USER_PASSWORD}
