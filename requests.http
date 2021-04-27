@@ -1,0 +1,32 @@
+GET http://localhost:8080/api/v1/beers
+
+###
+POST http://localhost:8080/api/v1/beers
+Content-Type: application/json
+
+{
+  "name": "Colorado appia",
+  "brand": "Colorado",
+  "max": 20,
+  "quantity": 10,
+  "type": "LAGER"
+}
+
+###
+DELETE http://localhost:8080/api/v1/beers/2
+
+###
+PATCH http://localhost:8080/api/v1/beers/1/increment
+Content-Type: application/json
+
+{
+   "quantity": 5
+}
+
+###
+PATCH http://localhost:8080/api/v1/beers/1/decrement
+Content-Type: application/json
+
+{
+  "quantity": 2
+}

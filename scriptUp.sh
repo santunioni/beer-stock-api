@@ -1,0 +1,15 @@
+docker network create -d bridge beerstock_network || true
+
+docker run --rm -itd --name beerstock_mysql --network=beerstock-network --env-file .env mysql:8
+
+echo "Let's sleep for 10 seconds and give some time for the database to start gracefully ..."
+sleep 10s
+
+./mvnw clean install
+docker build . -t santunioni/beerstock_api:0.0.1
+docker run --rm -itdp 8080:8080 --name beerstock_api --network=beerstock-network --env-file .env santunioni/beerstock_api:0.0.1
+
+echo "You are ready to go! Access http://localhost:8080/api/v1/beers to see the list of Beers."
+echo "Open the file requests.http in your IDE to start making also post requests to the CRUD."
+echo "The file also documents the API."
+echo "Takedown the infrastructure later with ./scriptDown.sh"

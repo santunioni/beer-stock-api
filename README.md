@@ -1,58 +1,21 @@
-forked from [**here**](https://github.com/rpeleias/beer_api_digital_innovation_one/tree/3269aa71b73318e0374dac79b6ebed65662b3e14) using the **download zip** resource (unfortunaly I didn't use the GitHub fork resource).
+## Beerstock API tests
 
-<h2>Digital Innovation: Expert class - Desenvolvimento de testes unitários para validar uma API REST de gerenciamento de estoques de cerveja.</h2>
+This is my implementation of the test suite for a beerstock Rest API. The API was developed by [**Rodrigo Peleias**](https://github.com/rpeleias/beer_api_digital_innovation_one/tree/3269aa71b73318e0374dac79b6ebed65662b3e14), who also developed his test suite. My contributions were:
 
-Nesta live coding, vamos aprender a testar, unitariamente, uma API REST para o gerenciamento de estoques de cerveja. Vamos desenvolver testes unitários para validar o nosso sistema de gerenciamento de estoques de cerveja, e também apresentar os principais conceitos e vantagens de criar testes unitários com JUnit e Mockito. Além disso, vamos também mostrar como desenvolver funcionalidades da nossa API através da prática do TDD.
+- Develop my own version of the test suite, using AssertJ instead of Hamscrest. In my opinion AssertJ is better because it is more readable and ***readability counts***.
+- Write the docker configurations for running the MySQL databases in docker and writing the spring boot config-files, leaving the H2 database only for tests.https://restfulapi.net/)
 
-Durante a sessão, serão abordados os seguintes tópicos:
+* The tests were inspired by the awesome text [practical-test-pyramid](https://martinfowler.com/articles/practical-test-pyramid.html#TheImportanceOftestAutomation), which emphasizes importance of tests and guides to what a good test suite should be.
+* Create the [requests.http](requests.http) file to document the API. In my opinion, making requests in the IDE is better than using Postman, because you can have files documenting the API in the same repository as the API it-self.
 
-* Baixar um projeto através do Git para desenolver nossos testes unitários. 
-* Apresentação conceitual sobre testes: a pirâmide dos tipos de testes, e também a importância de cada tipo de teste durante o ciclo de desenvolvimento.
-* Foco nos testes unitários: mostrar o porque é importante o desenvolvimento destes tipos de testes como parte do ciclo de desenvolvimento de software.
-* Principais frameworks para testes unitários em Java: JUnit, Mockito e Hamcrest. 
-* Desenvolvimento de testes unitários para validação de funcionalides básicas: criação, listagem, consulta por nome e exclusão de cervejas.
-* TDD: apresentação e exemplo prático em 2 funcionaliades importantes: incremento e decremento do número de cervejas no estoque.
+## Running
 
-Para executar o projeto no terminal, digite o seguinte comando:
+You can run the API in two ways (assuming you have docker and docker-compose installed):
 
-```shell script
-mvn spring-boot:run 
-```
+- `docker-compose up` : you will create the database and application containers. If you see error-messages, it is because the spring boot app didn't wait for MySQL to start gracefully. The app will crash, but will initialize again after each crash, until the database is ready to accept connections. Bring down the infrastructure later with `docker-compose down`.
+- `./scriptUp.sh` : a second option for running the infrastructure. With this option I forced the spring boot app to wait the MySQL start gracefully. Bring down the infrastructure later with `./scriptDown.sh` .
 
-Para executar a suíte de testes desenvolvida durante a live coding, basta executar o seguinte comando:
 
-```shell script
-mvn clean test
-```
-
-Após executar o comando acima, basta apenas abrir o seguinte endereço e visualizar a execução do projeto:
-
-```
-http://localhost:8080/api/v1/beers
-```
-
-São necessários os seguintes pré-requisitos para a execução do projeto desenvolvido durante a aula:
-
-* Java 14 ou versões superiores.
-* Maven 3.6.3 ou versões superiores.
-* Intellj IDEA Community Edition ou sua IDE favorita.
-* Controle de versão GIT instalado na sua máquina.
-* Muita vontade de aprender e compartilhar conhecimento :)
-
-Abaixo, seguem links bem bacanas, sobre tópicos mencionados durante a aula:
-
-* [SDKMan! para gerenciamento e instalação do Java e Maven](https://sdkman.io/)
-* [Referência do Intellij IDEA Community, para download](https://www.jetbrains.com/idea/download)
-* [Palheta de atalhos de comandos do Intellij](https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf)
-* [Site oficial do Spring](https://spring.io/)
-* [Site oficial JUnit 5](https://junit.org/junit5/docs/current/user-guide/)
-* [Site oficial Mockito](https://site.mockito.org/)
-* [Site oficial Hamcrest](http://hamcrest.org/JavaHamcrest/)
-* [Referências - testes em geral com o Spring Boot](https://www.baeldung.com/spring-boot-testing)
-* [Referência para o padrão arquitetural REST](https://restfulapi.net/)
-* [Referência pirâmide de testes - Martin Fowler](https://martinfowler.com/articles/practical-test-pyramid.html#TheImportanceOftestAutomation)
-
-[Neste link](https://drive.google.com/file/d/1KPh19mvyKirorOI-UsEYHKkmZpet3Ks6/view?usp=sharing), seguem os slides apresentados como o roteiro utilizado para o desenvolvimento do projeto da nossa sessão.
 
 
 
